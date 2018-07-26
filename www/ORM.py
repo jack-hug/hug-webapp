@@ -92,7 +92,7 @@ class IntegerField(Field):
 		super().__init__(name,'bigint',primary_key,default)
 
 #继承Field，定义浮点类
-class FloadField(Field):
+class FloatField(Field):
 	def __init__(self, name = None,primary_key = False,default = 0):
 		super().__init__(name,'real',primary_key,default)
 		
