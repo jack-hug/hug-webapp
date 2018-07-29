@@ -209,13 +209,13 @@ class Model(dict,metaclass = ModelMetaclass):
 			sql.append(where)
 		if args is None:
 			args = []
-		orderBy = k.get('orderBy',None)
+		orderBy = kw.get('orderBy',None)
 		if orderBy:
 			sql.append('order by')
 			sql.append(orderBy)
 		limit = kw.get('limit',None)
 		if limit is not None:
-			sql=append('limit')
+			sql = append('limit')
 			if isinstance(limit,ini):
 				sql.append('?')
 				sql.append(limit)

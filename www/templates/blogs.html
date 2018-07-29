@@ -1,0 +1,27 @@
+{% extends '__base__.html' %}
+
+{% block title %}日志{% endblock%}
+
+{% block content %}
+<div class="col-md-8 col-xs-12">
+	{% for blog in blogs%}
+	<article class="">
+		<h2><a href="/blog/{{ blog.id}}">{{blog.name}}</a></h2>
+		<p class="">发表于{{ blog.created_at|datetime}}</p>
+		<p>{{ blog.summary }}</p>
+		<p><a href="/bolg/{{ blog.id}}">继续阅读<i></i></a></p>
+	</article>
+	<hr>
+	{% endfor %}
+</div>
+<div class="col-md-4 col-xs-6">
+	<div class="">
+		<h3>友情链接</h3>
+		<div class="list-group">
+  			<a href="#" class="list-group-item"><i class="glyphicon glyphicon-link"></i> 读书</a>
+  			<a href="#" class="list-group-item"><i class="glyphicon glyphicon-link"></i> Python教程</a>
+  			<a href="#" class="list-group-item"><i class="glyphicon glyphicon-link"></i> Git教程</a>
+		</div>
+	</div>
+	</div>
+	{% endblock %}
