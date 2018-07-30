@@ -149,7 +149,7 @@ def add_route(app,fn):
 		fn = asyncio.coroutine(fn)
 	logging.info('add route %s %s => %s(%s)' % (method,path,fn.__name__,', '.join(inspect.signature(fn).parameters.keys())))
 	app.router.add_route(method,path,RequestHandler(app,fn))
-
+	
 
 def add_routes(app,module_name):
 	n = module_name.rfind('.')
