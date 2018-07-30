@@ -1,0 +1,103 @@
+{% extends '__base__.html' %}
+
+{% block title %}注册{% endblock %}
+
+{% block beforehead %}
+
+<script>
+	function validateEmail(email) 
+	{
+		var re = /^[a-z0-9\.\-\_]+\@[a-z0-9\-\_]+(\.[a-z0-9\-\_]+){1,4}%/;
+		return re.test(email.toLowerCase());
+	}
+
+$(function()
+	{
+		var vm = new Vue(
+		{
+			el:'#vm',
+			data:
+			{
+				name:'',
+				email:'',
+				password1:'',
+				password2:''
+			},
+			methods:
+			{
+				submit:function(event)
+				{
+					event.preventDefault();
+					var $form = $('#vm');
+					if (! this.name.trim()) {
+						return $form.showFormError('请输入名字');
+					}
+					if (! validateEmail(this.meail.trim().toLowerCase())) {
+						return $form.showFormError('请输入正确的Email地址');
+					}
+					if (this.password1.length <6) {
+						return $form.showFormError('密码的长度不能少于6个字符');
+					}
+					if (this.password1 != this.password2) {
+						return $form.showFormError('两次密码不一致！');
+					}
+					var email = this.email.trim().toLowerCase();
+					$form.postJSON('/api/users',
+						{
+						name:this.name.trim(),
+						email:email,
+						passwd:CryptoJS.SHA1(email + ':' + this.password1).toString()
+						},
+						function (err.r) 
+						{
+							if (err) 
+							{
+								return $form.showFormError(err);
+							}
+							return location:assign('/');
+						});
+				}
+			}
+		
+		});
+		$('#vm').show();
+	});
+</script>
+
+{% endblock %}
+
+{% block content %}
+	<div class="col-md-4 col-xs-6">
+		<h1>欢迎注册！</h1>
+		<form id="vm" v-on="submit:submit" class="">
+			<div class=""></div>
+			<div class="">
+				<label class="">名字：</label>
+				<div class="">
+					<input type="text" maxlength="50" placeholder="名字" class="" v-model="name">
+				</div>
+			</div>
+			<div class="">
+				<label class="">电子邮件：</label>
+				<div class="">
+					<input type="text" maxlength="50" placeholder="你的邮件地址" class="" v-model="meail">
+				</div>
+			</div>
+			<div class="">
+				<label class="">密码：</label>
+				<div class="">
+					<input type="password" maxlength="50" placeholder="输入密码" class="" v-model="password1">
+				</div>
+			</div>
+			<div class="">
+				<label class="">再次输入密码：</label>
+				<div class="">
+					<input type="password" maxlength="50" placeholder="再次输入密码" class="" v-model="password1">
+				</div>
+			</div>
+			<div>
+				<button type="submit" class=""><i class="glyphicon glyphicon-user"></i> 注册</button>
+			</div>
+		</form>
+	</div>
+{% endblock %}

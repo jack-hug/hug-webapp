@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
 
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
     {% block meta %}<!-- block meta -->{% endblock %}
     <title>{% block title %} ? {% endblock %}-Awesome Python Webapp</title>
 
@@ -32,7 +33,7 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
         <li class="active" data-url = "blogs"><a href="/"><i class="glyphicon glyphicon-home"></i> 日志 <span class="sr-only">(current)</span></a></li>
-        <li><a href="#"><i class="glyphicon glyphicon-file"></i> 教程</a></li>
+        <li data-url= "register"><a href="#"><i class="glyphicon glyphicon-file"></i> 教程</a></li>
         <li><a href="#"><i class="glyphicon glyphicon-console"></i> 源码</a></li>
       </ul>
         <ul class="nav navbar-nav navbar-right">
@@ -78,7 +79,6 @@
 
 
     <!-- jQuery (Bootstrap 的所有 JavaScript 插件都依赖 jQuery，所以必须放在前边) -->
-    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
     <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
     <script src="../static/js/bootstrap.min.js"></script>
   </body>
