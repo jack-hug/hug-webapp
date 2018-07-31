@@ -230,9 +230,9 @@ $(function () {
                     console.error('Cannot call showFormError() on non-form object.');
                     return;
                 }
-                $form.find('input').removeClass('uk-form-danger');
-                $form.find('select').removeClass('uk-form-danger');
-                $form.find('textarea').removeClass('uk-form-danger');
+                $form.find('input').removeClass('form-group');
+                $form.find('select').removeClass('form-group');
+                $form.find('textarea').removeClass('form-group');
                 if ($alert.length === 0) {
                     console.warn('Cannot find .alert-danger element.');
                     return;
@@ -264,8 +264,8 @@ $(function () {
                     console.error('Cannot call showFormLoading() on non-form object.');
                     return;
                 }
-                if (!iconClass || iconClass.indexOf('uk-icon') < 0) {
-                    console.warn('Icon <i class="uk-icon-*>" not found.');
+                if (!iconClass || iconClass.indexOf('glyphicon glyphicon') < 0) {
+                    console.warn('Icon <i class="glyphicon glyphicon-user-*>" not found.');
                     return;
                 }
                 if (isLoading) {
