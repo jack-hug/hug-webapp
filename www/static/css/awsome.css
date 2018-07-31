@@ -1,3 +1,6 @@
 .margin-btm {
 	margin-bottom: 20px;
 }
+#vm {
+	display: none;
+}

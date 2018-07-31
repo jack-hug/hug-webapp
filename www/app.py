@@ -5,6 +5,7 @@ from aiohttp import web
 from jinja2 import Environment,FileSystemLoader
 from webkj import add_routes,add_static
 from handlers import user2cookie,COOKIE_NAME
+from config import configs
 
 
 def init_jinja2(app,**kw):
@@ -31,7 +32,6 @@ def init_jinja2(app,**kw):
 
 @asyncio.coroutine
 def logger_factory(app,handler):
-
 	@asyncio.coroutine
 	def logger(request):
 		logging.info('Request:%s %s' % (request.method,request.path))
@@ -99,7 +99,7 @@ def response_factory(app,handler):
 				return resp
 			else:
 				resp = web.Response(body = app['__templating__'].get_template(template).render(**r).encode('utf-8'))
-				resp.content_type = 'text/html;charset - utf-8'
+				resp.content_type = 'text/html;charset = utf-8'
 				return resp
 		if isinstance(r,int) and r >= 100 and r < 600:
 			return web.Response(r)
@@ -122,15 +122,14 @@ def datetime_filter(t):
 	if delta < 86400:
 		return u'%s小时前' % (delta // 3600)
 	if delta < 604800:
-		return u'%s天前' % (delta //86400)
+		return u'%s天前' % (delta // 86400)
 	dt = datetime.fromtimestamp(t)
 	return u'%s年%s月%s日' % (dt.year,dt.month,dt.day)
 
 @asyncio.coroutine
 def init(loop):
-
-	yield from ORM.create_pool(loop = loop,host = '127.0.0.1',port = 3306,user='root',password = 'HUANGzeng123',db = 'awesome')
-	app = web.Application(loop = loop,middlewares=[logger_factory,response_factory])
+	yield from ORM.create_pool(loop = loop,**configs.db)
+	app = web.Application(loop = loop,middlewares=[logger_factory,auth_factory,response_factory])
 	init_jinja2(app,filters = dict(datetime = datetime_filter))
 	add_routes(app,'handlers')
 	add_static(app)

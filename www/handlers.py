@@ -18,6 +18,7 @@ def user2cookie(user,max_age):
 	L = [user.id,expires,hashlib.sha1(s.encode('utf-8')).hexdigest()]
 	return '-'.join[L]
 
+@asyncio.coroutine
 def cookie2user(cookie_str):
 	if not cookie_str:
 		return None
@@ -28,7 +29,7 @@ def cookie2user(cookie_str):
 		uid,expires,sha1 = L
 		if int(expires) < time.time():
 			return None
-		user = yield from User.findAll(uid)
+		user = yield from User.find(uid)
 		if user is None:
 			return None
 		s = '%s-%s-%s-%s' % (uid,user.passwd,expires,_COOKIE_KEY)
@@ -60,43 +61,14 @@ def register():
 	return {
 	'__template__':'register.html'
 	}
-@get('/api/users')
-def api_users():
-	users = yield from User.findAll(orderBy = 'created_at desc')
-	for u in users:
-		u.passwd = '******'
-	return dict(users = users)
 
+@get('/signin')
+def signin():
+	return {
+	'__template__':'signin.html'
+	}
 
-_RE_EMAIL = re.compile(r'^[a-z0-9\.\-\_]+\@[a-z0-9\-\_]+(\.[a-z0-9\-\_]+){1,4}$')
-_RE_SHA1 = re.compile(r'^[0-9a-f]{40}$')
-
-
-@post('/api/users')
-def api_register_user(*,email,name,passwd):
-	if not name or not name.strip():
-		raise APIValueError('name')
-	if not email or not _RE_EMAIL.match(email):
-		raise APIValueError('email')
-	if not passwd or not _RE_SHA1.match(passwd):
-		raise APIValueError('passwd')
-	users = yield from User.findAll('email=?',[email])
-	if len(users) > 0:
-		raise APIError('register:failed','email','Email is already in use.')
-	uid = next_id()
-	sha1_passwd ='%s:%s' % (uid,passwd)
-	user = User(id = uid,nmae = name.strip(),email = email,passwd = hashlib.sha1(sha1_passwd.encode('utf-8')).hexdigest(),image = 'http://www.gravatar.com/avatar/%s?d=mm&s=120' % hashlib.md5(email.encode('utf-8')).hexdigest())
-	yield from user.save()
-
-	r = web.Response()
-	r.set_cookie(COOKIE_NAME, user2cookie(user,86400),max_age = 86400, httponly = True)
-	user.passwd = '******'
-	r.content_type = 'application/json'
-	r.body = json.dumps(user,ensure_ascii = False).encode('utf-8')
-	return r
-
-
-@post('api/authenticate')
+@post('/api/authenticate')
 def authenticate(*,email,passwd):
 	if not email:
 		raise APIValueError('email','Invalid email.')
@@ -121,3 +93,44 @@ def authenticate(*,email,passwd):
 	user.passwd = '******'
 	r.content_type = 'application/json'
 	r.body = json.dumps(user,ensure_ascii = False).encode('utf-8')
+	return r
+
+@get('/signout')
+def signout(request):
+	referer = request.headers.get('Referer')
+	r = web.HTTPFound(referer or '/')
+	r.set_cookie(COOKIE_NAME,'-deleted-',max_age = 0,httponly = True)
+	logging.info('user signed out.')
+	return r
+
+
+_RE_EMAIL = re.compile(r'^[a-z0-9\.\-\_]+\@[a-z0-9\-\_]+(\.[a-z0-9\-\_]+){1,4}$')
+_RE_SHA1 = re.compile(r'^[0-9a-f]{40}$')
+
+
+@post('/api/users')
+def api_register_user(*,email,name,passwd):
+	if not name or not name.strip():
+		raise APIValueError('name')
+	if not email or not _RE_EMAIL.match(email):
+		raise APIValueError('email')
+	if not passwd or not _RE_SHA1.match(passwd):
+		raise APIValueError('passwd')
+	users = yield from User.findAll('email=?',[email])
+	if len(users) > 0:
+		raise APIError('register:failed','email','Email is already in use.')
+	uid = next_id()
+	sha1_passwd ='%s:%s' % (uid,passwd)
+	user = User(id = uid,nmae = name.strip(),email = email,passwd = hashlib.sha1(sha1_passwd.encode('utf-8')).hexdigest(),image = 'http://www.gravatar.com/avatar/%s?d=mm&s=120' % hashlib.md5(email.encode('utf-8')).hexdigest())
+	yield from user.save()
+	r = web.Response()
+	r.set_cookie(COOKIE_NAME, user2cookie(user,86400),max_age = 86400, httponly = True)
+	user.passwd = '******'
+	r.content_type = 'application/json'
+	r.body = json.dumps(user,ensure_ascii = False).encode('utf-8')
+	return r
+	
+
+
+
+

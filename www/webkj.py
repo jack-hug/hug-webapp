@@ -17,7 +17,7 @@ def get(path):
 
 
 def post(path):
-	'''定义生成器@post'''
+	'''定义生成器@post('/path')'''
 	def decorator(func):
 		@functools.wraps(func)
 		def wrapper(*args,**kw):
