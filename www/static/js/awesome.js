@@ -230,9 +230,9 @@ $(function () {
                     console.error('Cannot call showFormError() on non-form object.');
                     return;
                 }
-                $form.find('input').removeClass('form-group');
-                $form.find('select').removeClass('form-group');
-                $form.find('textarea').removeClass('form-group');
+                $form.find('input').removeClass('alert-danger');
+                $form.find('select').removeClass('');
+                $form.find('textarea').removeClass('');
                 if ($alert.length === 0) {
                     console.warn('Cannot find .alert-danger element.');
                     return;
@@ -243,12 +243,12 @@ $(function () {
                         $('html,body').animate({ scrollTop: $alert.offset().top - 60 });
                     }
                     if (fieldName) {
-                        $form.find('[name=' + fieldName + ']').addClass('uk-form-danger');
+                        $form.find('[name=' + fieldName + ']').addClass('alert-danger');
                     }
                 }
                 else {
                     $alert.addClass('hidden').hide();
-                    $form.find('.uk-form-danger').removeClass('uk-form-danger');
+                    $form.find('.alert-danger').removeClass('alert-danger');
                 }
             });
         },
@@ -397,7 +397,7 @@ function _bindSubmit($form) {
             $submit = $form.find('button[type=submit]'),
             $i = $submit.find('i'),
             iconClass = $i.attr('class');
-        if (!iconClass || iconClass.indexOf('uk-icon') < 0) {
+        if (!iconClass || iconClass.indexOf('glyphicon') < 0) {
             $i = undefined;
         }
         $submit.attr('disabled', 'disabled');
@@ -440,7 +440,7 @@ function _display_error($obj, err) {
         $obj.hide();
     }
     var msg = err.message || String(err);
-    var L = ['<div class="uk-alert alert-danger">'];
+    var L = ['<div class="alert alert-danger">'];
     L.push('<p>Error: ');
     L.push(msg);
     L.push('</p><p>Code: ');
