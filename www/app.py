@@ -4,7 +4,7 @@ from datetime import datetime
 from aiohttp import web
 from jinja2 import Environment,FileSystemLoader
 from webkj import add_routes,add_static
-from handlers import user2cookie,COOKIE_NAME
+from handlers import cookie2user,COOKIE_NAME
 from config import configs
 
 
@@ -98,6 +98,7 @@ def response_factory(app,handler):
 				resp.content_type = 'application/json;charset = utf-8'
 				return resp
 			else:
+				r['__user__'] = request.__user__
 				resp = web.Response(body = app['__templating__'].get_template(template).render(**r).encode('utf-8'))
 				resp.content_type = 'text/html;charset = utf-8'
 				return resp

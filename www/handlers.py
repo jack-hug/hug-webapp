@@ -16,7 +16,7 @@ def user2cookie(user,max_age):
 	expires = str(int(time.time() + max_age))
 	s = '%s-%s-%s-%s' % (user.id,user.passwd,expires,_COOKIE_KEY)
 	L = [user.id,expires,hashlib.sha1(s.encode('utf-8')).hexdigest()]
-	return '-'.join[L]
+	return '-'.join(L)
 
 @asyncio.coroutine
 def cookie2user(cookie_str):
@@ -68,6 +68,11 @@ def signin():
 	'__template__':'signin.html'
 	}
 
+
+@post('/api/blogs')
+def api_create_blog(request,*,name,summary,content):
+	pass
+
 @post('/api/authenticate')
 def authenticate(*,email,passwd):
 	if not email:
@@ -83,7 +88,7 @@ def authenticate(*,email,passwd):
 	sha1 = hashlib.sha1()
 	sha1.update(user.id.encode('utf-8'))
 	sha1.update(b':')
-	sha1.update(passwd.encode(utf-8))
+	sha1.update(passwd.encode('utf-8'))
 	if user.passwd != sha1.hexdigest():
 		raise APIValueError('passwd','Invalid password.')
 
@@ -121,7 +126,7 @@ def api_register_user(*,email,name,passwd):
 		raise APIError('register:failed','email','Email is already in use.')
 	uid = next_id()
 	sha1_passwd ='%s:%s' % (uid,passwd)
-	user = User(id = uid,nmae = name.strip(),email = email,passwd = hashlib.sha1(sha1_passwd.encode('utf-8')).hexdigest(),image = 'http://www.gravatar.com/avatar/%s?d=mm&s=120' % hashlib.md5(email.encode('utf-8')).hexdigest())
+	user = User(id = uid,name = name.strip(),email = email,passwd = hashlib.sha1(sha1_passwd.encode('utf-8')).hexdigest(),image = 'http://www.gravatar.com/avatar/%s?d=mm&s=120' % hashlib.md5(email.encode('utf-8')).hexdigest())
 	yield from user.save()
 	r = web.Response()
 	r.set_cookie(COOKIE_NAME, user2cookie(user,86400),max_age = 86400, httponly = True)
