@@ -224,21 +224,21 @@ $(function () {
             return this.each(function () {
                 var
                     $form = $(this),
-                    $alert = $form && $form.find('.alert-danger'),
+                    $alert = $form && $form.find('.uk-alert-danger'),
                     fieldName = err && err.data;
                 if (! $form.is('form')) {
                     console.error('Cannot call showFormError() on non-form object.');
                     return;
                 }
-                $form.find('input').removeClass('form-group');
-                $form.find('select').removeClass('form-group');
-                $form.find('textarea').removeClass('form-group');
+                $form.find('input').removeClass('uk-form-danger');
+                $form.find('select').removeClass('uk-form-danger');
+                $form.find('textarea').removeClass('uk-form-danger');
                 if ($alert.length === 0) {
-                    console.warn('Cannot find .alert-danger element.');
+                    console.warn('Cannot find .uk-alert-danger element.');
                     return;
                 }
                 if (err) {
-                    $alert.text(err.message ? err.message : (err.error ? err.error : err)).removeClass('hidden').show();
+                    $alert.text(err.message ? err.message : (err.error ? err.error : err)).removeClass('uk-hidden').show();
                     if (($alert.offset().top - 60) < $(window).scrollTop()) {
                         $('html,body').animate({ scrollTop: $alert.offset().top - 60 });
                     }
@@ -247,7 +247,7 @@ $(function () {
                     }
                 }
                 else {
-                    $alert.addClass('hidden').hide();
+                    $alert.addClass('uk-hidden').hide();
                     $form.find('.uk-form-danger').removeClass('uk-form-danger');
                 }
             });
@@ -264,8 +264,8 @@ $(function () {
                     console.error('Cannot call showFormLoading() on non-form object.');
                     return;
                 }
-                if (!iconClass || iconClass.indexOf('glyphicon glyphicon') < 0) {
-                    console.warn('Icon <i class="glyphicon glyphicon-user-*>" not found.');
+                if (!iconClass || iconClass.indexOf('uk-icon') < 0) {
+                    console.warn('Icon <i class="uk-icon-*>" not found.');
                     return;
                 }
                 if (isLoading) {
@@ -440,7 +440,7 @@ function _display_error($obj, err) {
         $obj.hide();
     }
     var msg = err.message || String(err);
-    var L = ['<div class="uk-alert alert-danger">'];
+    var L = ['<div class="uk-alert uk-alert-danger">'];
     L.push('<p>Error: ');
     L.push(msg);
     L.push('</p><p>Code: ');
