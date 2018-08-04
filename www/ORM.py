@@ -215,12 +215,12 @@ class Model(dict,metaclass = ModelMetaclass):
 			sql.append(orderBy)
 		limit = kw.get('limit',None)
 		if limit is not None:
-			sql = append('limit')
-			if isinstance(limit,ini):
+			sql.append('limit')
+			if isinstance(limit,int):
 				sql.append('?')
 				sql.append(limit)
 			elif isinstance(limit,tuple) and len(limit) == 2:
-				sql.append('?,?')
+				sql.append('?, ?')
 				args.extend(limit)
 			else:
 				raise ValueError('Invalid limit value: %s' % str(limit))
